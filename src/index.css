@@ -14,8 +14,10 @@ code {
 
 
 .form{
+  box-shadow: 15px 25px 21px -3px;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh
 }
+#main-form{  box-shadow: 15px 25px 21px -3px;}
