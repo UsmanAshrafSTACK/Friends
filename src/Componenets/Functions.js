@@ -33,14 +33,3 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 // export {SignUpUser}
 
 
-// setDoc(doc(db, "Accounts", email), {
-//     user: {
-//       userName,
-//       email,
-//       gender,
-//       phone,
-//       password,
-//       dob,
-//       profPic : imgUrl
-//     },
-//   });

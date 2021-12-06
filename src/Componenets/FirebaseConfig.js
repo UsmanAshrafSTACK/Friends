@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
     apiKey: "AIzaSyBsWjzarxIytBd-Pq6H1t6-2dsB0MHd_1A",
     authDomain: "friends-smit.firebaseapp.com",
@@ -15,5 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore();
+export const storage = getStorage(app)
 
 

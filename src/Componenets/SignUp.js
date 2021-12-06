@@ -15,7 +15,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { DatePicker } from "@material-ui/pickers";
-import { app, db } from "./FirebaseConfig";
+import { app, db, storage } from "./FirebaseConfig";
 import { useState, useEffect } from "react";
 import {
   collection,
@@ -27,26 +27,64 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
-import { getStorage, ref } from "firebase/storage";
-const storage = getStorage();
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL } from "@firebase/storage";
 
 const Signup = () => {
-    const navigate = useNavigate()
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [check, setCheck] = useState("");
+  const [dob, setDOB] = useState("");
+  const [profPic, setProfPic] = useState("");
+
+  const navigate = useNavigate();
+
   const SignUpUser = () => {
- 
     const auth = getAuth();
- 
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         alert("Your Account Is Created");
         const user = userCredential.user;
-        const uid  = user.id
-       
+        const uid = user.id;
+        let d = new Date();
+        let t = d.getTime();
+        let files = document.getElementById("file").files[0];
+        const storageRef = ref(storage, `/${email}/${t}`);
+        const uploadTask = uploadBytesResumable(storageRef, files);
 
-
-
-
-        navigate("./home")
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          },
+          (error) => {
+            alert("An Error Occured During Uploading Your Picture");
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              let pic = downloadURL;
+              setDoc(doc(db, "Accounts", email), {
+                user: {
+                  userName,
+                  email,
+                  gender,
+                  phone,
+                  password,
+                  dob,
+                  pic,
+                },
+              });
+           
+            });
+          }
+        );
+        navigate("/home");
       })
       .catch((error) => {
         alert("An Error Occured");
@@ -61,31 +99,7 @@ const Signup = () => {
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const marginTop = { marginTop: 5 };
 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [check, setCheck] = useState("");
-  const [dob, setDOB] = useState("");
-  const [profPic, setProfPic] = useState("");
-
-
-const nouman = ()=>{
-  
-
-  let docu = document.getElementsByClassName("file");
-
-  const profPic = ref(storage, "docu");
-  const mountainImagesRef = ref(storage, docu);
- 
-  console.log(mountainImagesRef)
-
-}
-
   const userSignUp = (e) => {
-
     e.preventDefault();
     let terms = document.getElementById("check").checked;
     if (password === confirmPassword && password != "" && terms) {
@@ -109,7 +123,7 @@ const nouman = ()=>{
             <TextField
               onChange={(e) => {
                 setUserName(e.target.value);
-                console.log(e.target.value);
+             
               }}
               fullWidth
               label="Name"
@@ -118,7 +132,7 @@ const nouman = ()=>{
             <TextField
               onChange={(e) => {
                 setEmail(e.target.value);
-                console.log(e.target.value);
+             
               }}
               fullWidth
               label="Email"
@@ -129,7 +143,7 @@ const nouman = ()=>{
               <RadioGroup
                 onChange={(e) => {
                   setGender(e.target.value);
-                  console.log(e.target.value);
+               
                 }}
                 aria-label="gender"
                 name="gender"
@@ -151,7 +165,7 @@ const nouman = ()=>{
             <input
               onChange={(e) => {
                 setDOB(e.target.value);
-                console.log(e.target.value);
+             
               }}
               className="dob"
               type="Date"
@@ -160,7 +174,7 @@ const nouman = ()=>{
               <TextField
                 onChange={(e) => {
                   setPhone(e.target.value);
-                  console.log(e.target.value);
+               
                 }}
                 fullWidth
                 label="Phone Number"
@@ -169,7 +183,7 @@ const nouman = ()=>{
               <TextField
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  console.log(e.target.value);
+               
                 }}
                 fullWidth
                 label="Password"
@@ -178,19 +192,16 @@ const nouman = ()=>{
               <TextField
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
-                  console.log(e.target.value);
+               
                 }}
                 fullWidth
                 label="Confirm Password"
                 placeholder="Confirm your password"
               />
               <p className="text">Select Your Profile Picture</p>
-              <input className="file"
-                onChange={(e) => {
-                  setProfPic(e.target.value);
-                  console.log(e.target.value);
-                }}
+              <input
                 type="file"
+                id="file"
                 accept="image/*"
                 name="Select Profile Picture"
               />
@@ -207,7 +218,6 @@ const nouman = ()=>{
               >
                 Sign up
               </Button>
-              <input type="button" onClick={nouman}/>
             </div>
           </form>
         </Paper>
