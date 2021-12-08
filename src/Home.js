@@ -1,8 +1,8 @@
 import React from 'react'
-import ResponsiveAppBar from './Componenets/ResponsiveAppBar'
+import MiniDrawer from './Componenets/MiniDrawer'
 
 export default function Home() {
   return (
-   <ResponsiveAppBar/>
+   <MiniDrawer/>
   )
 }

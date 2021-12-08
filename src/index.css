@@ -38,3 +38,49 @@ code {
   line-height: 1.5;
   letter-spacing: 0.00938em
 }
+
+.userInfo{
+  flex-direction: column;
+  position: fixed;
+  height: 70%;
+  width: 40%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 25px 25px 25px;
+}
+
+.userDiv{
+  display: flex;
+    justify-content: center;
+}
+
+.postMain{position: fixed;
+  top: 25%;
+  left: 25%;
+  height: 70%;
+  width: 70%;
+  background: #fff;
+  box-shadow: 25px 25px 25px;}
+
+  .postDiv{position: fixed;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    }
+    .input{
+      left: 95%;
+      position: relative;
+      color: #fff;
+      z-index: 2;
+      background: red;
+      padding: 15px 18px;
+      border-radius: 50%;
+      top: 15%;
+      border: none;
+      outline: none;
+    }
+    
